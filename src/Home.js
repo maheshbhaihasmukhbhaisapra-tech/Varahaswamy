@@ -77,7 +77,7 @@ function HeroSlideshow() {
         <motion.img
           key={src}
           src={src}
-          alt=""
+          alt="" // decorative img
           initial={{ opacity: i === current ? 1 : 0 }}
           animate={{ opacity: i === current ? 1 : 0 }}
           transition={{ duration: 1 }}
@@ -372,6 +372,7 @@ export default function VarahaswamyLanding() {
             transition={{ duration: 0.8 }}
             src="/Banner/3.webp"
             className="rounded-lg shadow"
+            alt="Varahaswamy Guest House Banner"
           />
         </div>
       </section>
@@ -439,6 +440,7 @@ export default function VarahaswamyLanding() {
                 <img
                   src={`/Rooms/${i}.webp`}
                   className="h-48 w-full object-cover"
+                  alt={`${room} Room`}
                 />
 
                 <div
@@ -489,6 +491,7 @@ export default function VarahaswamyLanding() {
           <img
             src="/Banner/2.webp"
             className="rounded-lg shadow"
+            alt="Varahaswamy Guest House Service"
           />
 
           <div className="space-y-4">
@@ -643,9 +646,9 @@ title="Tirupati Map"
           className="flex justify-center gap-10 mb-6"
           style={{ color: customRed }}
         >
-          <a href="#">Privacy Policy</a>
-          <a href="#">Disclaimer</a>
-          <a href="#">Terms & Conditions</a>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/disclaimer">Disclaimer</a>
+          <a href="/terms-and-conditions">Terms & Conditions</a>
         </div>
 
         <p>© 2026 Created with Varahaswamy Guest House</p>
