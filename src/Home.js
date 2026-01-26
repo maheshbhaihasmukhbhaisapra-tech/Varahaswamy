@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { FaFacebookF, FaTwitter, FaTumblr, FaTiktok, FaWhatsapp } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaTumblr,
+  FaTiktok,
+  FaWhatsapp,
+  FaPhoneAlt,
+} from "react-icons/fa";
 
 // Hamburger icon SVG (for simplicity, inline)
 function Hamburger({ open, color = "#ff234d", ...props }) {
@@ -59,6 +66,10 @@ const customRed = "#ff234d";
 
 const HERO_IMAGES = Array.from({ length: 9 }, (_, i) => `/Banner/${i}.webp`);
 
+// Use a constant for the phone and whatsapp number
+const PHONE_NUMBER = "+919179567877";
+const PHONE_DISPLAY = "+91 9179567877";
+
 function HeroSlideshow() {
   const [current, setCurrent] = useState(0);
   const timeoutRef = useRef();
@@ -88,6 +99,73 @@ function HeroSlideshow() {
       {/* Black overlay for consistent background shade over images */}
       <div className="absolute inset-0 bg-black/60" />
     </div>
+  );
+}
+
+// Floating Icons Component
+function FloatingIcons() {
+  // WhatsApp and call configurations
+  const whatsappHref = `https://wa.me/${PHONE_NUMBER.replace("+", "")}`;
+  const callHref = `tel:${PHONE_NUMBER}`;
+  return (
+    <>
+      {/* Floating WhatsApp Icon Left */}
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed left-4 bottom-10 z-[100] flex items-center justify-center rounded-full shadow-lg"
+        style={{
+          backgroundColor: "#25D366",
+          color: "#fff",
+          width: 56,
+          height: 56,
+          fontSize: 30,
+          boxShadow:
+            "0 5px 30px rgba(40,200,100,0.20), 0 2px 6px rgba(0,0,0,0.10)",
+          transition: "transform 0.12s",
+        }}
+        aria-label="WhatsApp"
+        tabIndex={0}
+      >
+        <FaWhatsapp />
+      </a>
+      {/* Floating Call Icon Right */}
+      <a
+        href={callHref}
+        className="fixed right-4 bottom-10 z-[100] flex items-center justify-center rounded-full shadow-lg"
+        style={{
+          backgroundColor: customRed,
+          color: "#fff",
+          width: 56,
+          height: 56,
+          fontSize: 26,
+          boxShadow:
+            "0 5px 30px rgba(255,36,77,0.18), 0 2px 6px rgba(0,0,0,0.09)",
+          transition: "transform 0.12s",
+        }}
+        aria-label={`Call ${PHONE_DISPLAY}`}
+        tabIndex={0}
+      >
+        <FaPhoneAlt />
+      </a>
+      {/* Optionally, add a small media query for mobile so they don't block other actions */}
+      <style>{`
+        @media (max-width: 500px) {
+          .floating-contact-mobile-hide {
+            display: none !important;
+          }
+          /* Slightly higher on very small screens */
+          .fixed.left-4.bottom-10, .fixed.right-4.bottom-10 {
+            bottom: 18px !important;
+          }
+        }
+        .fixed.left-4.bottom-10:hover, .fixed.right-4.bottom-10:hover {
+          transform: scale(1.10) translateY(-4px);
+          filter: brightness(1.1);
+        }
+      `}</style>
+    </>
   );
 }
 
@@ -123,6 +201,8 @@ export default function VarahaswamyLanding() {
 
   return (
     <div className="w-full bg-white font-sans scroll-smooth max-w-[100vw] overflow-x-hidden">
+      {/* Floating BOTH SIDE WhatsApp and Call Icons */}
+      <FloatingIcons />
 
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-gray-300 border-b border-gray-400">
@@ -264,7 +344,7 @@ export default function VarahaswamyLanding() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="tel:+919016631350"
+              href={`tel:${PHONE_NUMBER}`}
               className="border px-6 py-2 flex items-center justify-center gap-2"
               style={{
                 borderColor: customRed,
@@ -279,11 +359,11 @@ export default function VarahaswamyLanding() {
                 e.currentTarget.style.color = customRed;
               }}
             >
-              Call +91 9016631350
+              Call {PHONE_DISPLAY}
             </a>
 
             <a
-              href="https://wa.me/919016631350"
+              href={`https://wa.me/${PHONE_NUMBER.replace('+', '')}`}
               className="px-6 py-2 flex items-center justify-center gap-2"
               target="_blank"
               rel="noopener noreferrer"
@@ -430,41 +510,109 @@ export default function VarahaswamyLanding() {
       {/* ROOMS GRID */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-6">
-          {["AC 2 BED", "AC 4 BED", "NON-AC 2 BED", "NON-AC 4 BED"].map(
-            (room, i) => (
+          {[
+            {
+              name: "AC ROOM with 2 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 1650,
+              image: "/Rooms/0.webp",
+            },
+            {
+              name: "NON AC Room with 2 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 1250,
+              image: "/Rooms/1.webp",
+            },
+            {
+              name: "AC ROOM with 3 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 2050,
+              image: "/Rooms/2.webp",
+            },
+            {
+              name: "NON AC ROOM with 3 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 1750,
+              image: "/Rooms/3.webp",
+            },
+            {
+              name: "AC ROOM with 4 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 2550,
+              image: "/Rooms/4bed.jpeg",
+            },
+            {
+              name: "NON AC ROOM with 4 BED",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 2250,
+              image: "/Rooms/4bed2.avif",
+            },
+            {
+              name: "GROUP STAY",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 3050,
+              image: "/Rooms/group.jpeg",
+            },
+          ].map((room, i) => {
+            // WhatsApp message without price
+            const whatsappMessage = encodeURIComponent(
+              `Hello, I am interested in booking a ${room.name}. Please let me know the details.`
+            );
+            const whatsappUrl = `https://wa.me/${PHONE_NUMBER.replace(
+              /\D/g,
+              ""
+            )}?text=${whatsappMessage}`;
+
+            return (
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.05 }}
-                className="rounded overflow-hidden"
+                className="rounded overflow-hidden flex flex-col h-full  "
               >
                 <img
-                  src={`/Rooms/${i}.webp`}
+                  src={room.image}
                   className="h-48 w-full object-cover"
-                  alt={`${room} Room`}
+                  alt={room.name}
                 />
-
                 <div
-                  className="text-white p-5 text-center"
+                  className="text-white p-5 text-center flex flex-col flex-grow justify-between pb-16"
                   style={{
                     clipPath: "polygon(0 0,100% 0,100% 85%,50% 100%,0 85%)",
-                    backgroundColor: customRed
+                    backgroundColor: customRed,
                   }}
                 >
-                  <h3 className="font-bold mb-2">{room}</h3>
-                  <p className="text-xs mb-3">INCLUDING BREAKFAST + GST</p>
+                  <h3 className="font-bold mb-1 uppercase">{room.name}</h3>
+                  <div className="mb-2 text-xs tracking-wide">{room.name}</div>
+                  <p className="text-xs mb-3">{room.description}</p>
 
                   <div
-                    className="bg-white rounded-full px-4 py-1 inline-block text-sm font-semibold"
-                    style={{
-                      color: customRed
-                    }}
+                    className="text-white rounded-full px-4 py-1 inline-block text-sm font-semibold mb-4"
                   >
-                    Rs. {i === 2 ? 1350 : i % 2 ? 2550 : 1850}/Night
+                    Rs.{room.price} <span className="text-xs font-normal">/ day</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full w-full bg-white text-lg font-bold py-2 flex items-center justify-center gap-2"
+                      style={{ color: customRed, textDecoration: "none" }}
+                    >
+                      <FaWhatsapp className="text-2xl" />
+                      Book Now
+                    </a>
+                    <a
+                      href={`tel:${PHONE_NUMBER}`}
+                      className="rounded-full w-full bg-white text-lg font-bold py-2 flex items-center justify-center"
+                      style={{ color: customRed, textDecoration: 'none' }}
+                    >
+                      Call Now
+                    </a>
                   </div>
                 </div>
               </motion.div>
-            )
-          )}
+            );
+          })}
         </div>
       </section>
 
