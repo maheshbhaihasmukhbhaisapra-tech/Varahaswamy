@@ -110,26 +110,35 @@ function FloatingIcons() {
   return (
     <>
       {/* Floating WhatsApp Icon Left */}
-      <a
-        href={whatsappHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed left-4 bottom-10 z-[100] flex items-center justify-center rounded-full shadow-lg"
-        style={{
-          backgroundColor: "#25D366",
-          color: "#fff",
-          width: 56,
-          height: 56,
-          fontSize: 30,
-          boxShadow:
-            "0 5px 30px rgba(40,200,100,0.20), 0 2px 6px rgba(0,0,0,0.10)",
-          transition: "transform 0.12s",
-        }}
-        aria-label="WhatsApp"
-        tabIndex={0}
-      >
-        <FaWhatsapp />
-      </a>
+      {(() => {
+        // Custom WhatsApp message for asking about room
+        const whatsappMessage = encodeURIComponent(
+          "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
+        );
+        const whatsappHrefWithMsg = `https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${whatsappMessage}`;
+        return (
+          <a
+            href={whatsappHrefWithMsg}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed left-4 bottom-10 z-[100] flex items-center justify-center rounded-full shadow-lg"
+            style={{
+              backgroundColor: "#25D366",
+              color: "#fff",
+              width: 56,
+              height: 56,
+              fontSize: 30,
+              boxShadow:
+                "0 5px 30px rgba(40,200,100,0.20), 0 2px 6px rgba(0,0,0,0.10)",
+              transition: "transform 0.12s",
+            }}
+            aria-label="WhatsApp"
+            tabIndex={0}
+          >
+            <FaWhatsapp />
+          </a>
+        );
+      })()}
       {/* Floating Call Icon Right */}
       <a
         href={callHref}
@@ -345,10 +354,10 @@ export default function VarahaswamyLanding() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
               href={`tel:${PHONE_NUMBER}`}
-              className="border px-6 py-2 flex items-center justify-center gap-2"
+              className=" px-6 py-2 flex items-center justify-center gap-2"
               style={{
-                borderColor: customRed,
-                color: customRed
+                backgroundColor: customRed,
+                color: "#fff"
               }}
               onMouseOver={e => {
                 e.currentTarget.style.backgroundColor = customRed;
@@ -362,25 +371,34 @@ export default function VarahaswamyLanding() {
               Call {PHONE_DISPLAY}
             </a>
 
-            <a
-              href={`https://wa.me/${PHONE_NUMBER.replace('+', '')}`}
-              className="px-6 py-2 flex items-center justify-center gap-2"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                backgroundColor: customRed,
-                color: "#fff"
-              }}
-              onMouseOver={e => {
-                e.currentTarget.style.backgroundColor = "#e00038";
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.backgroundColor = customRed;
-              }}
-            >
-              <FaWhatsapp className="inline-block" />
-              WhatsApp
-            </a>
+            {(() => {
+              // Custom WhatsApp message for asking about room
+              const whatsappMessage = encodeURIComponent(
+                `Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details.`
+              );
+              const whatsappUrl = `https://wa.me/${PHONE_NUMBER.replace('+', '')}?text=${whatsappMessage}`;
+              return (
+                <a
+                  href={whatsappUrl}
+                  className="px-6 py-2 flex items-center justify-center gap-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    backgroundColor: customRed,
+                    color: "#fff"
+                  }}
+                  onMouseOver={e => {
+                    e.currentTarget.style.backgroundColor = "#e00038";
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.backgroundColor = customRed;
+                  }}
+                >
+                  <FaWhatsapp className="inline-block" />
+                  WhatsApp
+                </a>
+              );
+            })()}
           </div>
         </motion.div>
       </section>
@@ -426,12 +444,23 @@ export default function VarahaswamyLanding() {
               Designed for comfort, convenience and spiritual surroundings.
             </p>
 
-            <button
-              className="border px-6 py-2 hover:text-white rounded-full"
+            {/*
+              "Book Now" button as a WhatsApp link with a prefilled message.
+              See: src/Home.js context line 368 for message.
+            */}
+            <a
+              href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+                "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border px-6 py-2 hover:text-white rounded-full inline-block"
               style={{
                 borderColor: customRed,
                 color: customRed,
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
+                textDecoration: "none",
+                transition: "background 0.15s, color 0.15s"
               }}
               onMouseOver={e => {
                 e.currentTarget.style.backgroundColor = customRed;
@@ -441,9 +470,10 @@ export default function VarahaswamyLanding() {
                 e.currentTarget.style.backgroundColor = "transparent";
                 e.currentTarget.style.color = customRed;
               }}
+              aria-label="Book Now via WhatsApp"
             >
               Book Now
-            </button>
+            </a>
           </motion.div>
 
           <motion.img
@@ -521,7 +551,7 @@ export default function VarahaswamyLanding() {
               name: "NON AC Room with 2 BED",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 1250,
-              image: "/Rooms/1.webp",
+              image: "/Rooms/group.jpeg",
             },
             {
               name: "AC ROOM with 3 BED",
@@ -539,19 +569,25 @@ export default function VarahaswamyLanding() {
               name: "AC ROOM with 4 BED",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 2550,
-              image: "/Rooms/4bed.jpeg",
+              image: "/Rooms/4bed2.avif",
             },
             {
               name: "NON AC ROOM with 4 BED",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 2250,
-              image: "/Rooms/4bed2.avif",
+              image: "/Rooms/4bed.jpeg",
             },
             {
               name: "GROUP STAY",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 3050,
-              image: "/Rooms/group.jpeg",
+              image: "/Rooms/1.webp",
+            },
+            {
+              name: "FAMILY STAY",
+              description: "BREAKFAST LUNCH DINNER GST INCLUDED",
+              price: 2600,
+              image: "/Rooms/2.webp",
             },
           ].map((room, i) => {
             // WhatsApp message without price
@@ -681,11 +717,18 @@ export default function VarahaswamyLanding() {
      
 
         <div className="text-center mt-10">
-          <button
-            className="px-8 py-2 rounded-full"
+          <a
+            href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+              "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-2 rounded-full inline-block"
             style={{
               backgroundColor: customRed,
-              color: "#fff"
+              color: "#fff",
+              textDecoration: "none",
+              transition: "background 0.15s, color 0.15s"
             }}
             onMouseOver={e => {
               e.currentTarget.style.backgroundColor = "#e00038";
@@ -693,9 +736,10 @@ export default function VarahaswamyLanding() {
             onMouseOut={e => {
               e.currentTarget.style.backgroundColor = customRed;
             }}
+            aria-label="Book Now via WhatsApp"
           >
             Book Now
-          </button>
+          </a>
         </div>
       </section>
       <section
@@ -760,10 +804,17 @@ export default function VarahaswamyLanding() {
               <li>Comfortable rooms in Tirupati</li>
             </ul>
 
-            <button
-              className="text-white px-6 py-2 rounded-full"
+            <a
+              href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+                "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white px-6 py-2 rounded-full w-fit flex items-center gap-2"
               style={{
-                backgroundColor: customRed
+                backgroundColor: customRed,
+                textDecoration: "none",
+                transition: "background 0.15s, color 0.15s"
               }}
               onMouseOver={e => {
                 e.currentTarget.style.backgroundColor = "#e00038";
@@ -771,9 +822,11 @@ export default function VarahaswamyLanding() {
               onMouseOut={e => {
                 e.currentTarget.style.backgroundColor = customRed;
               }}
+              aria-label="Contact Us via WhatsApp"
             >
+              <FaWhatsapp className="inline-block" />
               Contact Us
-            </button>
+            </a>
           </div>
 
      
