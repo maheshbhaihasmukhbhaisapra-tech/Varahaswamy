@@ -104,8 +104,7 @@ function HeroSlideshow() {
 
 // Floating Icons Component
 function FloatingIcons() {
-  // WhatsApp and call configurations
-  const whatsappHref = `https://wa.me/${PHONE_NUMBER.replace("+", "")}`;
+  // Call configuration
   const callHref = `tel:${PHONE_NUMBER}`;
   return (
     <>
