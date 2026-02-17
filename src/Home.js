@@ -803,6 +803,10 @@ export default function VarahaswamyLanding() {
               <li>Comfortable rooms in Tirupati</li>
             </ul>
 
+            <a  className="text-gray-700 mb-6" href={"mailto:support@varaswami.site"} >
+                support@varaswami.site
+            </a>
+
             <a
               href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
                 "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
