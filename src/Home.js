@@ -574,13 +574,13 @@ export default function VarahaswamyLanding() {
               name: "NON AC ROOM with 4 BED",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 2250,
-              image: "/Rooms/4bed.jpeg",
+              image: "/Rooms/1.webp",
             },
             {
               name: "GROUP STAY",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 3050,
-              image: "/Rooms/1.webp",
+              image: "/Rooms/4bed.jpeg",
             },
             {
               name: "FAMILY STAY",
