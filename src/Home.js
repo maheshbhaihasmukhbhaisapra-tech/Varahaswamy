@@ -66,10 +66,6 @@ const customRed = "#ff234d";
 
 const HERO_IMAGES = Array.from({ length: 9 }, (_, i) => `/Banner/${i}.webp`);
 
-// Use a constant for the phone and whatsapp number
-const PHONE_NUMBER = "+919179567877";
-const PHONE_DISPLAY = "+91 9179567877";
-
 function HeroSlideshow() {
   const [current, setCurrent] = useState(0);
   const timeoutRef = useRef();
@@ -103,9 +99,9 @@ function HeroSlideshow() {
 }
 
 // Floating Icons Component
-function FloatingIcons() {
+function FloatingIcons({ phoneNo, phoneDisplay }) {
   // Call configuration
-  const callHref = `tel:${PHONE_NUMBER}`;
+  const callHref = `tel:${phoneNo || ""}`;
   return (
     <>
       {/* Floating WhatsApp Icon Left */}
@@ -114,7 +110,9 @@ function FloatingIcons() {
         const whatsappMessage = encodeURIComponent(
           "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
         );
-        const whatsappHrefWithMsg = `https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${whatsappMessage}`;
+        const whatsappHrefWithMsg = phoneNo
+          ? `https://wa.me/${phoneNo.replace("+", "")}?text=${whatsappMessage}`
+          : "#";
         return (
           <a
             href={whatsappHrefWithMsg}
@@ -152,7 +150,7 @@ function FloatingIcons() {
             "0 5px 30px rgba(255,36,77,0.18), 0 2px 6px rgba(0,0,0,0.09)",
           transition: "transform 0.12s",
         }}
-        aria-label={`Call ${PHONE_DISPLAY}`}
+        aria-label={`Call ${phoneDisplay || phoneNo || ""}`}
         tabIndex={0}
       >
         <FaPhoneAlt />
@@ -181,6 +179,46 @@ export default function VarahaswamyLanding() {
   // For navbar: mobile menu open/close state
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Phone state (from Google Sheets)
+  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneDisplay, setPhoneDisplay] = useState("");
+
+  // Fetch mobile number from Google Sheets on mount
+  useEffect(() => {
+    const url =
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTP1VWGQlzvTQmFM-dI-C3vvUby1kXiE64-L-D6ceWwVQsi3xIEcngMKON7f-Rer9z8mE4tuTawQG0u/pub?output=csv&cacheBust="
+ +
+      Date.now();
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("Network error");
+        return res.text();
+      })
+      .then((data) => {
+        const rows = data.trim().split("\n");
+        let phone = rows[0].split(",")[0].trim();
+
+        // Remove spaces and any non-digit characters
+        phone = phone.replace(/\D/g, "");
+
+        // Remove leading 0 if present
+        if (phone.startsWith("0")) {
+          phone = phone.substring(1);
+        }
+
+        // Add +91
+        const formattedPhone = `+91${phone}`;
+        setPhoneNo(formattedPhone);
+
+        // Add pretty display (e.g. "+91 9179567877")
+        setPhoneDisplay(`+91 ${phone.replace(/^91/, "").replace(/(\d{5})(\d{5})/, "$1 $2")}`);
+      })
+      .catch((err) => {
+        console.error("Error fetching phone:", err);
+      });
+  }, []);
+
   // Close nav menu on route/hash change or window resize (>=md)
   useEffect(() => {
     function handleResize() {
@@ -207,10 +245,18 @@ export default function VarahaswamyLanding() {
     { label: "SERVICES", href: "#services" },
   ];
 
+  // By default fallback (if phone not loaded yet)
+  const fallbackPhone = "";
+  const finalPhoneNo = phoneNo || fallbackPhone;
+  const finalPhoneDisplay =
+    phoneDisplay ||
+    ("+91 " +
+      fallbackPhone.replace(/^\+?91/, "").replace(/(\d{5})(\d{5})/, "$1 $2"));
+
   return (
     <div className="w-full bg-white font-sans scroll-smooth max-w-[100vw] overflow-x-hidden">
       {/* Floating BOTH SIDE WhatsApp and Call Icons */}
-      <FloatingIcons />
+      <FloatingIcons phoneNo={finalPhoneNo} phoneDisplay={finalPhoneDisplay} />
 
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-gray-300 border-b border-gray-400">
@@ -352,7 +398,7 @@ export default function VarahaswamyLanding() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href={`tel:${PHONE_NUMBER}`}
+              href={`tel:${finalPhoneNo}`}
               className=" px-6 py-2 flex items-center justify-center gap-2"
               style={{
                 backgroundColor: customRed,
@@ -367,7 +413,7 @@ export default function VarahaswamyLanding() {
                 e.currentTarget.style.color = customRed;
               }}
             >
-              Call {PHONE_DISPLAY}
+              Call {finalPhoneDisplay}
             </a>
 
             {(() => {
@@ -375,7 +421,7 @@ export default function VarahaswamyLanding() {
               const whatsappMessage = encodeURIComponent(
                 `Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details.`
               );
-              const whatsappUrl = `https://wa.me/${PHONE_NUMBER.replace('+', '')}?text=${whatsappMessage}`;
+              const whatsappUrl = `https://wa.me/${finalPhoneNo.replace('+', '')}?text=${whatsappMessage}`;
               return (
                 <a
                   href={whatsappUrl}
@@ -448,7 +494,7 @@ export default function VarahaswamyLanding() {
               See: src/Home.js context line 368 for message.
             */}
             <a
-              href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+              href={`https://wa.me/${finalPhoneNo.replace("+", "")}?text=${encodeURIComponent(
                 "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
               )}`}
               target="_blank"
@@ -574,13 +620,13 @@ export default function VarahaswamyLanding() {
               name: "NON AC ROOM with 4 BED",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 2250,
-              image: "/Rooms/1.webp",
+              image: "/Rooms/4bed.jpeg",
             },
             {
               name: "GROUP STAY",
               description: "BREAKFAST LUNCH DINNER GST INCLUDED",
               price: 3050,
-              image: "/Rooms/4bed.jpeg",
+              image: "/Rooms/1.webp",
             },
             {
               name: "FAMILY STAY",
@@ -593,7 +639,7 @@ export default function VarahaswamyLanding() {
             const whatsappMessage = encodeURIComponent(
               `Hello, I am interested in booking a ${room.name}. Please let me know the details.`
             );
-            const whatsappUrl = `https://wa.me/${PHONE_NUMBER.replace(
+            const whatsappUrl = `https://wa.me/${finalPhoneNo.replace(
               /\D/g,
               ""
             )}?text=${whatsappMessage}`;
@@ -637,7 +683,7 @@ export default function VarahaswamyLanding() {
                       Book Now
                     </a>
                     <a
-                      href={`tel:${PHONE_NUMBER}`}
+                      href={`tel:${finalPhoneNo}`}
                       className="rounded-full w-full bg-white text-lg font-bold py-2 flex items-center justify-center"
                       style={{ color: customRed, textDecoration: 'none' }}
                     >
@@ -717,7 +763,7 @@ export default function VarahaswamyLanding() {
 
         <div className="text-center mt-10">
           <a
-            href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+            href={`https://wa.me/${finalPhoneNo.replace("+", "")}?text=${encodeURIComponent(
               "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
             )}`}
             target="_blank"
@@ -803,12 +849,8 @@ export default function VarahaswamyLanding() {
               <li>Comfortable rooms in Tirupati</li>
             </ul>
 
-            <a  className="text-gray-700 mb-6" href={"mailto:support@varaswami.site"} >
-                support@varaswami.site
-            </a>
-
             <a
-              href={`https://wa.me/${PHONE_NUMBER.replace("+", "")}?text=${encodeURIComponent(
+              href={`https://wa.me/${finalPhoneNo.replace("+", "")}?text=${encodeURIComponent(
                 "Hello, I am interested in booking a room at Varahaswamy Guest House. Please share room availability and details."
               )}`}
               target="_blank"
