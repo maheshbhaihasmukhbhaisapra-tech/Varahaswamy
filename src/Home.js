@@ -8,6 +8,8 @@ import {
   FaWhatsapp,
   FaPhoneAlt,
 } from "react-icons/fa";
+import Policies from "./Policies";
+import BookingEnquiry from "./Booking";
 
 // Hamburger icon SVG (for simplicity, inline)
 function Hamburger({ open, color = "#ff234d", ...props }) {
@@ -886,16 +888,20 @@ title="Tirupati Map"
         </div>
       </section>
 
+      <BookingEnquiry phoneNo={phoneNo}/>
+
+      <Policies />
+
       {/* FOOTER */}
       <footer className="bg-black text-gray-400 py-10 text-center text-sm">
-        <div
+        {/* <div
           className="flex justify-center gap-10 mb-6"
           style={{ color: customRed }}
         >
           <a href="/privacy-policy">Privacy Policy</a>
           <a href="/disclaimer">Disclaimer</a>
           <a href="/terms-and-conditions">Terms & Conditions</a>
-        </div>
+        </div> */}
 
         <p>© 2026 Created with Varahaswamy Guest House</p>
       </footer>
